@@ -3,6 +3,7 @@
 ## Grade 16.62/20
 
 The program can't run because trec_eval is missing.
+
 An advanced information retrieval system for Steam games with AI-powered semantic search capabilities.
 
 ## Features

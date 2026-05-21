@@ -1,0 +1,12 @@
+map                   	1	0.0000
+recip_rank            	1	0.0000
+P_5                   	1	0.0000
+ndcg_cut_10           	1	0.0000
+map                   	2	0.0000
+recip_rank            	2	0.0000
+P_5                   	2	0.0000
+ndcg_cut_10           	2	0.0000
+map                   	all	0.0000
+recip_rank            	all	0.0000
+P_5                   	all	0.0000
+ndcg_cut_10           	all	0.0000

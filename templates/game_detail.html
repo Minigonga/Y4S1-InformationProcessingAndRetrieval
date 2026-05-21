@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Details - Game Search Engine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .detail-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            background: #4a90e2;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: #357abd;
+        }
+
+        .game-header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .game-title {
+            font-size: 2.5em;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .game-main-image {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .game-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .meta-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4a90e2;
+        }
+
+        .meta-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .meta-value {
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+
+        .game-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            margin: 0 0 15px 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 10px;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .support-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4a90e2;
+        }
+
+        .support-title {
+            font-weight: bold;
+            color: #4a90e2;
+            margin-bottom: 8px;
+        }
+
+        .support-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .support-list li {
+            margin-bottom: 6px;
+            color: #2c3e50;
+        }
+
+        .description-text {
+            line-height: 1.8;
+            color: #444;
+            font-size: 1.05em;
+        }
+
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .requirement-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .requirement-title {
+            font-weight: bold;
+            color: #4a90e2;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .screenshot-img {
+            width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .screenshot-img:hover {
+            transform: scale(1.05);
+        }
+
+        .review-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4a90e2;
+            position: relative;
+        }
+
+        .review-text {
+            font-style: italic;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+        }
+
+        .review-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .review-source {
+            font-weight: 600;
+            color: #4a90e2;
+            font-size: 1em;
+        }
+
+        .review-score {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .loading-detail {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner-detail {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4a90e2;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .error-detail {
+            background: #fee;
+            color: #c33;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #c33;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .requirements-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .game-title {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-container">
+        <a href="/" class="back-button">← Back to Search</a>
+        
+        <div id="loading" class="loading-detail">
+            <div class="spinner-detail"></div>
+            <p>Loading game details...</p>
+        </div>
+
+        <div id="error" class="error-detail" style="display: none;"></div>
+
+        <div id="gameContent" style="display: none;">
+            <!-- Content will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000';
+        const gameId = "{{ game_id }}";
+
+        // Load game details on page load
+        async function loadGameDetails() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/game/${gameId}`);
+                const data = await response.json();
+
+                document.getElementById('loading').style.display = 'none';
+
+                if (data.success && data.game) {
+                    displayGameDetails(data.game);
+                } else {
+                    showError(data.error || 'Game not found');
+                }
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                showError('Error loading game details: ' + error.message);
+            }
+        }
+
+        function displayGameDetails(game) {
+            document.title = `${game.title || 'Game Details'} - Game Search Engine`;
+            
+            console.log('Game object:', game);
+            console.log('Reviews field:', game.reviews);
+            console.log('Has reviews?', !!game.reviews);
+            
+            const content = document.getElementById('gameContent');
+            content.style.display = 'block';
+
+            const osList = (() => {
+                if (game.OS_label) {
+                    const raw = Array.isArray(game.OS_label)
+                        ? game.OS_label
+                        : String(game.OS_label).split(/[,;/]/);
+                    const cleaned = raw.map(os => os.trim()).filter(Boolean);
+                    if (cleaned.length) {
+                        return cleaned;
+                    }
+                }
+                const fallback = [];
+                if (game.windows) fallback.push('Windows');
+                if (game.mac) fallback.push('macOS');
+                if (game.linux) fallback.push('Linux');
+                return fallback;
+            })();
+
+            // Build the detailed view
+            let html = `
+                <div class="game-header">
+                    <h1 class="game-title">${escapeHtml(game.title || 'Untitled Game')}</h1>
+                    ${game.header_image ? `<img src="${escapeHtml(game.header_image)}" alt="${escapeHtml(game.title)}" class="game-main-image" onerror="this.style.display='none'">` : ''}
+                    
+                    <div class="game-meta-grid">
+                        ${game.release_date ? `
+                            <div class="meta-box">
+                                <div class="meta-label">Release Date</div>
+                                <div class="meta-value">${new Date(game.release_date).toLocaleDateString()}</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${game.price !== undefined ? `
+                            <div class="meta-box">
+                                <div class="meta-label">Price</div>
+                                <div class="meta-value">${game.price > 0 ? `$${parseFloat(game.price).toFixed(2)}` : 'Free'}</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${game.developers ? `
+                            <div class="meta-box">
+                                <div class="meta-label">Developers</div>
+                                <div class="meta-value">${escapeHtml(Array.isArray(game.developers) ? game.developers.join(', ') : game.developers)}</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${game.publishers ? `
+                            <div class="meta-box">
+                                <div class="meta-label">Publishers</div>
+                                <div class="meta-value">${escapeHtml(Array.isArray(game.publishers) ? game.publishers.join(', ') : game.publishers)}</div>
+                            </div>
+                        ` : ''}
+
+                        ${osList.length ? `
+                            <div class="meta-box">
+                                <div class="meta-label">Supported OS</div>
+                                <div class="meta-value">${escapeHtml(osList.join(', '))}</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${game.achievements ? `
+                            <div class="meta-box">
+                                <div class="meta-label">Achievements</div>
+                                <div class="meta-value">🏆 ${game.achievements}</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${game.positive ? `
+                            <div class="meta-box">
+                                <div class="meta-label">Reviews</div>
+                                <div class="meta-value">👍 ${game.positive} / 👎 ${game.negative || 0}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            // Description section
+            if (game.detailed_description || game.about_the_game) {
+                html += `
+                    <div class="game-section">
+                        <h2 class="section-title">About This Game</h2>
+                        <div class="description-text">
+                            ${game.detailed_description || game.about_the_game || 'No description available.'}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Genres, Categories, Tags
+            if (game.genres || game.categories || game.tags) {
+                html += `
+                    <div class="game-section">
+                        <h2 class="section-title">Categories & Tags</h2>
+                `;
+                
+                if (game.genres) {
+                    const genres = Array.isArray(game.genres) ? game.genres : [game.genres];
+                    html += `
+                        <div style="margin-bottom: 15px;">
+                            <strong>Genres:</strong>
+                            <div class="tag-list">
+                                ${genres.map(g => `<span class="tag">${escapeHtml(g)}</span>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (game.categories) {
+                    const categories = Array.isArray(game.categories) ? game.categories : [game.categories];
+                    html += `
+                        <div style="margin-bottom: 15px;">
+                            <strong>Categories:</strong>
+                            <div class="tag-list">
+                                ${categories.map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (game.tags) {
+                    const tags = Array.isArray(game.tags) ? game.tags : [game.tags];
+                    html += `
+                        <div>
+                            <strong>Tags:</strong>
+                            <div class="tag-list">
+                                ${tags.slice(0, 20).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                html += `</div>`;
+            }
+
+            const supportedLanguages = Array.isArray(game.supported_languages)
+                ? game.supported_languages
+                : (game.supported_languages ? [game.supported_languages] : []);
+            const audioLanguages = Array.isArray(game.full_audio_languages)
+                ? game.full_audio_languages
+                : (game.full_audio_languages ? [game.full_audio_languages] : []);
+
+            if (supportedLanguages.length || audioLanguages.length) {
+                html += `
+                    <div class="game-section">
+                        <h2 class="section-title">Language Support</h2>
+                        <div class="support-grid">
+                            ${supportedLanguages.length ? `
+                                <div class="support-box">
+                                    <div class="support-title">Supported Languages</div>
+                                    <ul class="support-list">
+                                        ${supportedLanguages.map(lang => `<li>${escapeHtml(lang)}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                            ${audioLanguages.length ? `
+                                <div class="support-box">
+                                    <div class="support-title">Supported Audio</div>
+                                    <ul class="support-list">
+                                        ${audioLanguages.map(lang => `<li>${escapeHtml(lang)}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // System Requirements
+            if (game.pc_requirements || game.mac_requirements || game.linux_requirements) {
+                html += `
+                    <div class="game-section">
+                        <h2 class="section-title">System Requirements</h2>
+                        <div class="requirements-grid">
+                `;
+                
+                if (game.pc_requirements) {
+                    html += `
+                        <div class="requirement-box">
+                            <div class="requirement-title">💻 Windows</div>
+                            <div>${game.pc_requirements}</div>
+                        </div>
+                    `;
+                }
+                
+                if (game.mac_requirements) {
+                    html += `
+                        <div class="requirement-box">
+                            <div class="requirement-title">🍎 Mac</div>
+                            <div>${game.mac_requirements}</div>
+                        </div>
+                    `;
+                }
+                
+                if (game.linux_requirements) {
+                    html += `
+                        <div class="requirement-box">
+                            <div class="requirement-title">🐧 Linux</div>
+                            <div>${game.linux_requirements}</div>
+                        </div>
+                    `;
+                }
+                
+                html += `</div></div>`;
+            }
+
+            // Reviews
+            console.log('Checking reviews - exists?', 'reviews' in game, 'value:', game.reviews);
+            if (game.reviews) {
+                const reviewsStr = typeof game.reviews === 'string' ? game.reviews : String(game.reviews);
+                console.log('Reviews raw (type:', typeof reviewsStr, '):', reviewsStr);
+                
+                if (reviewsStr && reviewsStr.trim().length > 0) {
+                    const parsedReviews = parseReviews(reviewsStr);
+                    console.log('Parsed reviews:', parsedReviews);
+                    
+                    if (parsedReviews.length > 0) {
+                        html += `
+                            <div class="game-section">
+                                <h2 class="section-title">Reviews</h2>
+                                ${parsedReviews.map(review => `
+                                    <div class="review-card">
+                                        <div class="review-text">"${escapeHtml(review.text)}"</div>
+                                        <div class="review-footer">
+                                            <span class="review-source">${escapeHtml(review.source)}</span>
+                                            ${review.score ? `<span class="review-score">Score: ${review.score}/100</span>` : ''}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    } else {
+                        console.log('No reviews parsed from string');
+                    }
+                } else {
+                    console.log('Reviews field is empty or whitespace');
+                }
+            } else {
+                console.log('No reviews field in game object');
+            }
+
+            // Screenshots
+            if (game.screenshots) {
+                const screenshots = Array.isArray(game.screenshots) ? game.screenshots : [game.screenshots];
+                html += `
+                    <div class="game-section">
+                        <h2 class="section-title">Screenshots</h2>
+                        <div class="screenshots-grid">
+                            ${screenshots.slice(0, 6).map(url => `
+                                <img src="${escapeHtml(url)}" class="screenshot-img" alt="Screenshot" onerror="this.style.display='none'">
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = html;
+        }
+
+        function parseReviews(reviewsString) {
+            if (!reviewsString || typeof reviewsString !== 'string') {
+                console.log('parseReviews: No valid reviews string');
+                return [];
+            }
+            
+            const normalized = normalizeReviewText(reviewsString);
+            console.log('parseReviews: Input string:', normalized.substring(0, 200));
+            
+            const reviews = [];
+            // Split by quote patterns and process each review
+            // Pattern matches: "text" optional_score – source OR "text" source
+            const quotePattern = /"([^"]+)"\s*([^\"]*?)(?="|$)/g;
+            
+            let match;
+            while ((match = quotePattern.exec(normalized)) !== null) {
+                const text = match[1].trim();
+                const afterQuote = match[2].trim();
+                
+                console.log('parseReviews: Found quote:', text.substring(0, 50), 'afterQuote:', afterQuote);
+                
+                if (!text) continue;
+                
+                // Try to extract score and source from the part after the quote
+                // Patterns: "86 – GameStar", "4.5/5 – TheGamer", "Kotaku", etc.
+                const scoreSourceMatch = afterQuote.match(/^\s*(\d+(?:[.,/]\d+)?)\s*[–—-]\s*(.+)$/);
+                
+                if (scoreSourceMatch) {
+                    // Has score
+                    const scoreStr = scoreSourceMatch[1];
+                    const score = scoreStr.includes('/') ? parseFloat(scoreStr.split('/')[0]) * 20 : parseFloat(scoreStr.replace(',', '.'));
+                    const source = scoreSourceMatch[2].trim();
+                    
+                    reviews.push({
+                        text: text,
+                        score: Math.round(score),
+                        source: source || 'Unknown'
+                    });
+                } else if (afterQuote) {
+                    // No score, just source after dash or space
+                    const sourceMatch = afterQuote.match(/^\s*[–—-]?\s*(.+)$/);
+                    const source = sourceMatch ? sourceMatch[1].trim() : afterQuote.trim();
+                    
+                    if (source) {
+                        reviews.push({
+                            text: text,
+                            score: null,
+                            source: source
+                        });
+                    }
+                } else {
+                    // No source found, just the quote
+                    reviews.push({
+                        text: text,
+                        score: null,
+                        source: 'Unknown'
+                    });
+                }
+            }
+            
+            console.log('parseReviews: Total reviews parsed:', reviews.length);
+            return reviews;
+        }
+
+        function normalizeReviewText(text) {
+            return text
+                .replace(/&quot;/gi, '"')
+                .replace(/&apos;/gi, "'")
+                .replace(/&amp;/gi, '&')
+                .replace(/<br\s*\/?\>/gi, ' ')
+                .replace(/[\u201C\u201D\u201E\u201F\u00AB\u00BB]/g, '"')
+                .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'")
+                .replace(/[\u2013\u2014\u2015\u2212]/g, '-')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function escapeHtml(text) {
+            if (text === null || text === undefined) return '';
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return String(text).replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.style.display = 'block';
+            errorDiv.innerHTML = `<strong>Error:</strong> ${escapeHtml(message)}`;
+        }
+
+        // Load details on page load
+        loadGameDetails();
+    </script>
+</body>
+</html>

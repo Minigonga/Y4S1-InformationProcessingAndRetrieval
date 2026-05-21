@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Search Engine</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 Game Search Engine</h1>
+            <p class="subtitle">Search through thousands of games</p>
+        </header>
+
+        <div class="search-box">
+            <form id="searchForm">
+                <div class="search-input-wrapper">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search for games..." 
+                        autocomplete="off"
+                        autofocus
+                    >
+                    <button type="submit" id="searchButton">
+                        <span>Search</span>
+                    </button>
+                </div>
+                <div class="search-options">
+                    <label>
+                        Search mode:
+                        <select id="searchMode">
+                            <option value="keyword" selected>Keyword Search</option>
+                            <option value="semantic">Semantic Search</option>
+                            <option value="hybrid">Hybrid Search</option>
+                        </select>
+                    </label>
+                    <label>
+                        Results per page:
+                        <select id="rowsSelect">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </label>
+                </div>
+                
+                <div class="filters-section">
+                    <button type="button" id="toggleFilters" class="toggle-filters-btn">
+                        🎛️ Show Filters
+                    </button>
+                    <div id="filtersContainer" class="filters-container" style="display: none;">
+                        <div class="filter-row">
+                            <label>
+                                Price Range:
+                                <select id="priceFilter">
+                                    <option value="" selected>Any</option>
+                                    <option value="Free">Free</option>
+                                    <option value="Cheap">Cheap (&lt;$10)</option>
+                                    <option value="Affordable">Affordable ($10-$25)</option>
+                                    <option value="Expensive">Expensive (&gt;$25)</option>
+                                </select>
+                            </label>
+                            <label>
+                                Release Period:
+                                <select id="yearFilter">
+                                    <option value="" selected>Any</option>
+                                    <option value="Very Recent">Very Recent (2021-2025)</option>
+                                    <option value="Recent">Recent (2016-2020)</option>
+                                    <option value="Moderately Old">Moderately Old (2011-2015)</option>
+                                    <option value="Old">Old (2000-2010)</option>
+                                </select>
+                            </label>
+                            <label>
+                                Age Rating:
+                                <select id="ageFilter">
+                                    <option value="" selected>Any</option>
+                                    <option value="Kids">Kids</option>
+                                    <option value="Teen">Teen</option>
+                                    <option value="Mature">Mature</option>
+                                    <option value="Adult">Adult</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="filter-row">
+                            <label>
+                                Operating System:
+                                <select id="osFilter">
+                                    <option value="" selected>Any</option>
+                                    <option value="Windows">Windows</option>
+                                    <option value="Mac">Mac</option>
+                                    <option value="Linux">Linux</option>
+                                </select>
+                            </label>
+                            <label>
+                                Playtime:
+                                <select id="playtimeFilter">
+                                    <option value="" selected>Any</option>
+                                    <option value="Casual">Casual (&lt;10h)</option>
+                                    <option value="Moderate">Moderate (10-50h)</option>
+                                    <option value="Hardcore">Hardcore (&gt;50h)</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="filter-actions">
+                            <button type="button" id="clearFilters" class="clear-filters-btn">Clear All Filters</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-mode-info">
+                    <p id="modeDescription">Traditional keyword-based search</p>
+                </div>
+            </form>
+        </div>
+
+        <div id="searchInfo" class="search-info" style="display: none;"></div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Searching...</p>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="results" class="results"></div>
+    </div>
+
+    <script src="static/script.js"></script>
+</body>
+</html>

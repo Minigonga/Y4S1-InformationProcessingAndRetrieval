@@ -1,0 +1,19 @@
+1. 
+recent games for adults 
+release_year_label^3 age_rating_label^2
+
+2. 
+horror single player game
+tags^3 genres^3 about_the_game^2
+
+3.
+most recent geometry dash game
+title^3 release_year_label^2 about_the_game
+
+4.
+Casual recent game for kids about dinossaurs on windows
+price_range_label^3 age_rating_label^3 OS_label^3 title^2 release_year_label^2 about_the_game^2
+
+5.
+old games published by gamera games in RPG
+publishers^3 release_year_label^2 genres^2 tags^2
